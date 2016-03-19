@@ -1,4 +1,4 @@
-#include "kinectDmap.h"
+#include "KinectStreamsMat.h"
 
 CKinectStreamsMat::CKinectStreamsMat()
 {
