@@ -10,7 +10,10 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+<<<<<<< HEAD
+=======
 
+>>>>>>> cf364b34e23d090c889d734ab306a5d736363c0f
 #pragma once
 
 #include <Kinect.h>
@@ -21,13 +24,18 @@
 template<class Interface>
 inline void SafeRelease(Interface *& pInterfaceToRelease)
 {
-  if (pInterfaceToRelease != NULL)
+	if (pInterfaceToRelease != NULL)
 	{
 		pInterfaceToRelease->Release();
 		pInterfaceToRelease = NULL;
 	}
 }
 
+static enum FRAME_TYPE {
+	KS_DEPTH,
+	KS_IR,
+	KS_COLOR
+};
 
 class CKinectStreamsMat {
 private:
@@ -36,10 +44,14 @@ private:
 	IDepthFrameReader* _depth_reader;
 	IColorFrameSource* _color_source;
 	IColorFrameReader* _color_reader;
+	IInfraredFrameSource* _ir_source;
+	IInfraredFrameReader* _ir_reader;
+	cv::Mat getDepthFrame();
+	cv::Mat getColorFrame();
+	cv::Mat getIRframe();
 public:
 	CKinectStreamsMat();
 	~CKinectStreamsMat();
-	cv::Mat getDepthFrame();
-	cv::Mat getColorFrame();
+	cv::Mat getFrame(FRAME_TYPE);
 	HRESULT initSensor();
 };
