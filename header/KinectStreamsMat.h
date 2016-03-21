@@ -10,10 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-<<<<<<< HEAD
-=======
-
->>>>>>> cf364b34e23d090c889d734ab306a5d736363c0f
+ 
 #pragma once
 
 #include <Kinect.h>
