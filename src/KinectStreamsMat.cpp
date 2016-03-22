@@ -163,8 +163,6 @@ HRESULT CKinectStreamsMat::initSensor()
 
 	if (_sensor) {
 		hr = _sensor->Open();
-		HRESULT hr2 = hr;
-		HRESULT hr3 = hr;
 		if (SUCCEEDED(hr)) {
 			hr = _sensor->get_DepthFrameSource(&_depth_source);
 		}
@@ -173,29 +171,20 @@ HRESULT CKinectStreamsMat::initSensor()
 			hr = _depth_source->OpenReader(&_depth_reader);
 		}
 
-		if (SUCCEEDED(hr2)) {
-			hr2 = _sensor->get_ColorFrameSource(&_color_source);
+		if (SUCCEEDED(hr)) {
+			hr = _sensor->get_ColorFrameSource(&_color_source);
 		}
 
-		if (SUCCEEDED(hr2)) {
-			hr2 = _color_source->OpenReader(&_color_reader);
+		if (SUCCEEDED(hr)) {
+			hr = _color_source->OpenReader(&_color_reader);
 		}
 
-		if (SUCCEEDED(hr3)) {
-			hr3 = _sensor->get_InfraredFrameSource(&_ir_source);
+		if (SUCCEEDED(hr)) {
+			hr = _sensor->get_InfraredFrameSource(&_ir_source);
 		}
-		if (SUCCEEDED(hr3)) {
-			hr3 = _ir_source->OpenReader(&_ir_reader);
-		}
-		
-		if (FAILED(hr2)) {
-			return hr2;
-		}
-		
-		if (FAILED(hr3)) {
-			return hr3;
+		if (SUCCEEDED(hr)) {
+			hr = _ir_source->OpenReader(&_ir_reader);
 		}
 	}
-
 	return hr;
 }
