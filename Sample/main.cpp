@@ -11,51 +11,55 @@
  *
  */
  
-#include<iostream>
-#include "KinectStreamsMat.h"
+#include "KinectSources.h"
+
+using namespace cv;
 
 int main() {
-	//Obtain a CKinectStramsMat Object
-	CKinectStreamsMat* kinectStream = new CKinectStreamsMat();
+	//Create a CKinectSources Object
+	CKinectSources* source = new CKinectSources();
+	//Initialize the Kinect Sensor
+	HRESULT hr = source->initSensor();
 
-	HRESULT hr = E_FAIL;
+	Mat color, ir, depth;
 
-	//Initialize Sensor;
-	hr = kinectStream->initSensor();
-
-	//Exit With Error Code If Kinect Sensor Failed to Initialize
-	if (FAILED(hr)) {
-		return hr;
+	//Initialize Sources if Sensor Successfuly Initialized
+	if (SUCCEEDED(hr)) {
+		hr = source->initSourceReader(DEPTH_S | IR_S | COLOR_S);
 	}
 
-	cv::Mat depthImage,colorImage,irImage;
+	//if sources successfuly initialized start obtainig frames
+	if (SUCCEEDED(hr)) {
+		while (true) {
+			//get color frame
+			color = source->getFrame(COLOR_F);
+			//get IR frame
+			ir = source->getFrame(IR_F);
+			//get depth frame
+			depth = source->getFrame(DEPTH_F);
 
-	while (true) {
-		//Get a single depth frame from kinect
-		depthImage = kinectStream->getFrame(KS_DEPTH);
+			//ensure color image has data
+			if (color.data) {
+				imshow("color", color);
+			}
 
-		//Get a single color frame from kinect
-		colorImage = kinectStream->getFrame(KS_COLOR);
-		
-		//Get a single IR frame from Kinect
-		irImage = kinectStream->getFrame(KS_IR);
+			//ensure IR image has data
+			if (ir.data) {
+				imshow("ir", ir);
+			}
 
-		//ensure depthImage has data
-		if (depthImage.data)
-		    cv::imshow("Depth Image", depthImage);
+			//ensure depth image has data
+			if (depth.data) {
+				imshow("depth", depth);
+			}
 
-		//ensure colorImage has data
-		if(colorImage.data)
-		   cv::imshow("Color", colorImage);
-	   
-	   //ensure irImage has data
-	   if(irImage.data)
-		   cv::imshow("Infrared",irImage);
-
-		//exit if escape key is pressed
-		if (cv::waitKey(20) == 27) {
-			break;
+			//exit if user presses escape key
+			if (waitKey(20) == 27) {
+				break;
+			}
 		}
 	}
+
+	delete source;
 	return 0;
 }

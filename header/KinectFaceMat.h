@@ -10,27 +10,21 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+
 #pragma once
 
 #include "helper.h"
-#include "KinectSources.h"
 #include <opencv2\highgui.hpp>
+#include <opencv2\core.hpp>
 #include <opencv2\imgproc.hpp>
 #include <Windows.h>
 #include <Kinect.h>
 #include<Kinect.Face.h>
 
-
-	
-
-
 		/********************     Functions   *************************/
 
-		//Obtain Color Frame from Kinect If Color Source Successfuly Initialized
-		cv::Mat getColorFrame(IColorFrameReader * _color_reader , HRESULT sourceInitHresult);
+		//Obtain High Definition Face Frame from Kinect
+		cv::Mat getHDfaceFrame();			/********    To be implemented later   *********/
 
-		//Obtain Depth Frame from Kinect If Depth Source Successfuly Initialized
-		cv::Mat getDepthFrame(IDepthFrameReader * _depth_reader, HRESULT sourceInitHresult);
-
-		//Obtain Infrared Frame from Kinect If IR Source Successfuly Initialized
-		cv::Mat getIRframe(IInfraredFrameReader * _ir_reader, HRESULT sourceInitHresult);
+		//Obtain Standard Face Frame from Kinect
+		cv::Mat getSDFaceFrame();			/********    To be implemented later   *********/
