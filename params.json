@@ -1,0 +1,6 @@
+{
+  "name": "Kinect2OCV",
+  "tagline": "C++ library to Obtain Color,Depth,IR and Face data from Kinect V2 into OpenCV.",
+  "body": "C++ library to Obtain Color,Depth,IR and Face data from Kinect V2 into OpenCV.",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
