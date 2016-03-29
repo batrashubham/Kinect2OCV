@@ -1,21 +1,21 @@
 /*
- * Copyright (C) 2016, Shubham Batra (https://www.github.com/batrashubham)
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
- * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, 
- * software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
- * either express or implied.
- * See the License for the specific language governing permissions and limitations under the License.
- *
- */
+* Copyright (C) 2016, Shubham Batra (https://www.github.com/batrashubham)
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+* http://www.apache.org/licenses/LICENSE-2.0
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+* either express or implied.
+* See the License for the specific language governing permissions and limitations under the License.
+*
+*/
+
 
 #include "KinectSources.h"
 #include <iostream>
 
-
-
+FEATURETYPE features = BOUNDING_BOX_IN_COLOR_SAPCE | POINTS_IN_COLOR_SPACE;
 
 /********    Constructor      *********/
 CKinectSources::CKinectSources()
@@ -27,8 +27,6 @@ CKinectSources::CKinectSources()
 	_color_source = nullptr;
 	_ir_source = nullptr;
 	_ir_reader = nullptr;
-	_face_source = nullptr;
-	_face_reader = nullptr;
 	_hd_face_source = nullptr;
 	_hd_face_reader = nullptr;
 	_multi_source_frame_reader = nullptr;
@@ -37,9 +35,17 @@ CKinectSources::CKinectSources()
 	_body_reader = nullptr;
 	_body_source = nullptr;
 
+	for (int i = 0; i < BODY_COUNT; i++)
+	{
+		_face_source[i] = nullptr;
+		_face_source[i] = nullptr;
+	}
+
 	depthReaderInit = E_FAIL;
 	colorReaderInit = E_FAIL;
 	irReaderInit = E_FAIL;
+	faceReaderInit = E_FAIL;
+	bodyReaderInit = E_FAIL;
 
 }
 
@@ -65,6 +71,13 @@ CKinectSources::~CKinectSources()
 	SafeRelease(_body_reader);
 	SafeRelease(_body_index_source);
 	SafeRelease(_body_index_reader);
+
+	for (int i = 0; i < BODY_COUNT; i++)
+	{
+		SafeRelease(_face_source[i]);
+		SafeRelease(_face_reader[i]);
+	}
+
 	if (_sensor) {
 		_sensor->Close();
 	}
@@ -107,11 +120,12 @@ HRESULT CKinectSources::initMultiSourceReader(SOURCETYPE sourceTypes)
 
 //Initialize Single Source Readers
 //Can initialize more than one at a time
-//Currently Supported Sources :- IR,COLOR,DEPTH
+//Currently Supported Sources :- IR,COLOR,DEPTH,FACE BASICS
 //Rest to be implemented later
 HRESULT CKinectSources::initSourceReader(SOURCETYPE sourceType)
 {
-	HRESULT hrIR = S_OK, hrColor = S_OK, hrDepth = S_OK;
+	HRESULT hrIR = S_OK, hrColor = S_OK, hrDepth = S_OK,
+		hrFace = S_OK, hrBody = S_OK;
 
 	if (sourceType & IR_S) {
 		hrIR = initIRframeReader();
@@ -128,6 +142,20 @@ HRESULT CKinectSources::initSourceReader(SOURCETYPE sourceType)
 		colorReaderInit = hrColor;
 	}
 
+	if (sourceType & FACE_S) {
+		hrFace = initFaceFrameReader(features);
+		faceReaderInit = hrFace;
+	}
+
+	if (sourceType & BODY_S) {
+		hrBody = initBodyFrameReader();
+		bodyReaderInit = hrBody;
+	}
+
+	if (FAILED(hrFace)) {
+		std::cout << "Face Reader Failed to Initialize\n";
+	}
+
 	if (FAILED(hrIR)) {
 		std::cout << "Infrared Reader Failed to Initialize\n";
 	}
@@ -140,7 +168,12 @@ HRESULT CKinectSources::initSourceReader(SOURCETYPE sourceType)
 		std::cout << "Color Reader Failed to Initialize\n";
 	}
 
-	if (FAILED(hrIR) && FAILED(hrDepth) && FAILED(hrColor)) {
+	if (FAILED(hrBody)) {
+		std::cout << "Body Reader Failed to Initialize\n";
+	}
+
+	if (FAILED(hrIR) && FAILED(hrDepth) && FAILED(hrColor)
+		&& FAILED(hrFace) && FAILED(hrBody)) {
 		return E_FAIL;
 	}
 	else {
@@ -177,7 +210,11 @@ cv::Mat CKinectSources::getFrame(FRAMETYPE frameType)
 	if (frameType & COLOR_F) {
 		return getColorFrame(_color_reader, colorReaderInit);
 	}
-	
+}
+
+cv::Rect * CKinectSources::getFaceRect(int & trackedFaces)
+{
+	return getSDFaceRect(_body_reader, _face_reader, _face_source, trackedFaces, faceReaderInit, bodyReaderInit);
 }
 
 
@@ -187,16 +224,14 @@ cv::Mat CKinectSources::getFrame(FRAMETYPE frameType)
 //Initialize Color Source and Color Reader
 HRESULT CKinectSources::initColorFrameReader()
 {
-	HRESULT hr = S_OK;
+	HRESULT hr = E_FAIL;
 
-	if (SUCCEEDED(hr)) {
-		hr = _sensor->get_ColorFrameSource(&_color_source);
-	}
+	hr = _sensor->get_ColorFrameSource(&_color_source);
 
 	if (SUCCEEDED(hr)) {
 		hr = _color_source->OpenReader(&_color_reader);
 	}
-	
+
 	return hr;
 }
 
@@ -207,16 +242,15 @@ HRESULT CKinectSources::initColorFrameReader()
 //Initialize Depth Source and Depth Reader
 HRESULT CKinectSources::initDepthFrameReader()
 {
-	HRESULT hr = S_OK;
+	HRESULT hr = E_FAIL;
 
-	if (SUCCEEDED(hr)) {
-		hr = _sensor->get_DepthFrameSource(&_depth_source);
-	}
+	hr = _sensor->get_DepthFrameSource(&_depth_source);
+
 
 	if (SUCCEEDED(hr)) {
 		hr = _depth_source->OpenReader(&_depth_reader);
 	}
-	
+
 	return hr;
 }
 
@@ -227,25 +261,35 @@ HRESULT CKinectSources::initDepthFrameReader()
 //Initialize IR Source and IR Reader
 HRESULT CKinectSources::initIRframeReader()
 {
-	HRESULT hr = S_OK;
-	if (SUCCEEDED(hr)) {
-		hr = _sensor->get_InfraredFrameSource(&_ir_source);
-	}
+	HRESULT hr = E_FAIL;
+
+	hr = _sensor->get_InfraredFrameSource(&_ir_source);
+
 	if (SUCCEEDED(hr)) {
 		hr = _ir_source->OpenReader(&_ir_reader);
 	}
-	
+
 	return hr;
 }
 
 
 
-
-
-HRESULT CKinectSources::initFaceFrameReader()
+//Initialize Standard Face Frame Reader
+HRESULT CKinectSources::initFaceFrameReader(FEATURETYPE features)
 {
-	/****** To be implemented later *******/
-	return E_NOTIMPL;
+	HRESULT hr = S_OK;
+
+	for (int i = 0; i < BODY_COUNT; i++) {
+		if (SUCCEEDED(hr)) {
+			hr = CreateFaceFrameSource(_sensor, 0, features, &_face_source[i]);
+		}
+
+		if (SUCCEEDED(hr)) {
+			hr = _face_source[i]->OpenReader(&_face_reader[i]);
+		}
+	}
+
+	return hr;
 }
 
 
@@ -264,9 +308,15 @@ HRESULT CKinectSources::initHDFaceFrameReader()
 
 HRESULT CKinectSources::initBodyFrameReader()
 {
+	HRESULT hr = E_FAIL;
 
-	/***** To be implemented later ******/
-	return E_NOTIMPL;
+	hr = _sensor->get_BodyFrameSource(&_body_source);
+
+	if (SUCCEEDED(hr)) {
+		_body_source->OpenReader(&_body_reader);
+	}
+
+	return hr;
 }
 
 

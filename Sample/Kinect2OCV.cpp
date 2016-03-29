@@ -11,20 +11,12 @@
 *
 */
 
-#pragma once
+// Kinect2OCV.cpp : Defines the entry point for the console application.
+//
 
-#include "helper.h"
-#include "KinectSources.h"
-#include <opencv2\highgui.hpp>
-#include <opencv2\core.hpp>
-#include <opencv2\imgproc.hpp>
-#include <Windows.h>
-#include <Kinect.h>
-#include <Kinect.Face.h>
 
-//Obtain High Definition Face Frame from Kinect
-cv::Rect* getHDfaceRect();			/********    To be implemented later   *********/
+int main()
+{
+    return 0;
+}
 
-									//Obtain Standard Face Frame from Kinect
-cv::Rect* getSDFaceRect(IBodyFrameReader* _body_reader, IFaceFrameReader* _face_reader[],
-	IFaceFrameSource* _face_source[], int& trackedFaces, HRESULT faceReaderInit, HRESULT bodyReaderInit);
