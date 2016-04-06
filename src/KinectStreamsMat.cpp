@@ -32,11 +32,11 @@ cv::Mat getColorFrame(IColorFrameReader* _color_reader, HRESULT sourceInitHresul
 					hr = frameDesc->get_Height(&frameHeight);
 				}
 				if (SUCCEEDED(hr)) {
-					const int imgSize = frameWidth*frameHeight * 4; //4 Channels(BGRA)
-					BYTE* frameData = new BYTE[imgSize];
-					hr = frame->CopyConvertedFrameDataToArray(imgSize, frameData, ColorImageFormat_Bgra);
-					if (SUCCEEDED(hr)) {
-						colorImage = cv::Mat(frameHeight, frameWidth, CV_8UC4, reinterpret_cast<void*>(frameData));
+					const int imgSize = frameWidth*frameHeight * 4 * sizeof(unsigned char); //4 Channels(BGRA)
+					colorImage = cv::Mat(frameHeight,frameWidth,CV_8UC4);
+					hr = frame->CopyConvertedFrameDataToArray(imgSize,reinterpret_cast<BYTE*>(colorImage.data), ColorImageFormat_Bgra);
+					if(FAILED(hr)){
+						return cv::Mat();
 					}
 				}
 			}
