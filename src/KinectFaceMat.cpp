@@ -14,6 +14,7 @@
 
 #include "KinectFaceMat.h"
 
+cv::Rect faceRects[BODY_COUNT];
 
 cv::Rect* getHDfaceRect()
 {
@@ -22,117 +23,76 @@ cv::Rect* getHDfaceRect()
 	return nullptr;
 }
 
-
-
-
 cv::Rect* getSDFaceRect(IBodyFrameReader* _body_reader, IFaceFrameReader* _face_reader[],
 	IFaceFrameSource* _face_source[], int& trackedFaces, HRESULT faceReaderinit, HRESULT bodyReaderInit)
 {
-	cv::Rect faceRect[BODY_COUNT];
-	HRESULT hr;
+	HRESULT hResult;
 	if (SUCCEEDED(faceReaderinit) && SUCCEEDED(bodyReaderInit)) {
-		IBody* Bodies[BODY_COUNT] = { 0 };
-		if (_body_reader != nullptr)
-		{
-			IBodyFrame* BodyFrame = nullptr;
-			hr = _body_reader->AcquireLatestFrame(&BodyFrame);
-			if (SUCCEEDED(hr))
-			{
-				hr = BodyFrame->GetAndRefreshBodyData(BODY_COUNT, Bodies);
-			}
-			SafeRelease(BodyFrame);
-		}
-		bool gotBodyData = SUCCEEDED(hr);
-
-		// iterate through each face reader
-		for (int iFace = 0; iFace < BODY_COUNT; ++iFace)
-		{
-			// fetch the latest face frame from current reader
-			IFaceFrame* frame = nullptr;
-			hr = _face_reader[iFace]->AcquireLatestFrame(&frame);
-
-			BOOLEAN isFaceTracked = false;
-			if (SUCCEEDED(hr) && nullptr != frame)
-			{
-				// check if a valid face is tracked in this face frame
-				hr = frame->get_IsTrackingIdValid(&isFaceTracked);
-			}
-
-			if (SUCCEEDED(hr))
-			{
-				if (isFaceTracked)
-				{
-					IFaceFrameResult* FaceFrameResult = nullptr;
-					RectI faceBox = { 0 };
-					PointF facePoints[FacePointType::FacePointType_Count];
-
-					hr = frame->get_FaceFrameResult(&FaceFrameResult);
-
-					// ensure FaceFrameResult contains data before trying to access it
-					if (SUCCEEDED(hr) && FaceFrameResult != nullptr)
-					{
-						hr = FaceFrameResult->get_FaceBoundingBoxInColorSpace(&faceBox);
-
-						if (SUCCEEDED(hr))
-						{
-							hr = FaceFrameResult->GetFacePointsInColorSpace(FacePointType::FacePointType_Count, facePoints);
+		IBodyFrame* pBodyFrame = nullptr;
+		hResult = _body_reader->AcquireLatestFrame(&pBodyFrame);
+		if (SUCCEEDED(hResult)) {
+			IBody* pBody[BODY_COUNT] = { 0 };
+			hResult = pBodyFrame->GetAndRefreshBodyData(BODY_COUNT, pBody);
+			if (SUCCEEDED(hResult)) {
+				for (int count = 0; count < BODY_COUNT; count++) {
+					BOOLEAN bTracked = false;
+					hResult = pBody[count]->get_IsTracked(&bTracked);
+					if (SUCCEEDED(hResult) && bTracked) {
+						/*// Joint
+						Joint joint[JointType::JointType_Count];
+						hResult = pBody[count]->GetJoints( JointType::JointType_Count, joint );
+						if( SUCCEEDED( hResult ) ){
+						for( int type = 0; type < JointType::JointType_Count; type++ ){
+						ColorSpacePoint colorSpacePoint = { 0 };
+						pCoordinateMapper->MapCameraPointToColorSpace( joint[type].Position, &colorSpacePoint );
+						int x = static_cast<int>( colorSpacePoint.X );
+						int y = static_cast<int>( colorSpacePoint.Y );
+						if( ( x >= 0 ) && ( x < width ) && ( y >= 0 ) && ( y < height ) ){
+						cv::circle( bufferMat, cv::Point( x, y ), 5, static_cast<cv::Scalar>( color[count] ), -1, CV_AA );
 						}
+						}
+						}*/
 
-						if (SUCCEEDED(hr)) {
-							//gives the number of faces tracked
+						// Set TrackingID to Detect Face
+						UINT64 trackingId = _UI64_MAX;
+						hResult = pBody[count]->get_TrackingId(&trackingId);
+						if (SUCCEEDED(hResult)) {
+							_face_source[count]->put_TrackingId(trackingId);
+						}
+					}
+				}
+			}
+			for (int count = 0; count < BODY_COUNT; count++) {
+				SafeRelease(pBody[count]);
+			}
+		}
+		SafeRelease(pBodyFrame);
+
+		for (int iFace = 0; iFace < BODY_COUNT; iFace++) {
+			IFaceFrame* pFaceFrame = nullptr;
+			hResult = _face_reader[iFace]->AcquireLatestFrame(&pFaceFrame);
+			if (SUCCEEDED(hResult) && pFaceFrame != nullptr) {
+				BOOLEAN bFaceTracked = false;
+				hResult = pFaceFrame->get_IsTrackingIdValid(&bFaceTracked);
+				if (SUCCEEDED(hResult) && bFaceTracked) {
+					IFaceFrameResult* pFaceResult = nullptr;
+					hResult = pFaceFrame->get_FaceFrameResult(&pFaceResult);
+					if (SUCCEEDED(hResult) && pFaceResult != nullptr) {
+						RectI faceBox;
+						hResult = pFaceResult->get_FaceBoundingBoxInColorSpace(&faceBox);
+						if (SUCCEEDED(hResult)) {
 							trackedFaces++;
-						}
-
-						//Set the values of corresponding cv::Rect
-						faceRect[iFace].x = faceBox.Left;
-						faceRect[iFace].y = faceBox.Top;
-						faceRect[iFace].width = faceBox.Right - faceBox.Left;
-						faceRect[iFace].height = faceBox.Bottom - faceBox.Top;
-
-					}
-
-					SafeRelease(FaceFrameResult);
-				}
-				else
-				{
-					// face tracking is not valid - attempt to fix the issue
-					// a valid body is required to perform this step
-					if (gotBodyData)
-					{
-						// check if the corresponding body is tracked 
-						// if this is true then update the face frame source to track this body
-						IBody* Body = Bodies[iFace];
-						if (Body != nullptr)
-						{
-							BOOLEAN isTracked = false;
-							hr = Body->get_IsTracked(&isTracked);
-
-							UINT64 bodyTId;
-							if (SUCCEEDED(hr) && isTracked)
-							{
-								// get the tracking ID of this body
-								hr = Body->get_TrackingId(&bodyTId);
-								if (SUCCEEDED(hr))
-								{
-									// update the face frame source with the tracking ID
-									_face_source[iFace]->put_TrackingId(bodyTId);
-								}
-							}
+							faceRects[iFace].x = faceBox.Left;
+							faceRects[iFace].y = faceBox.Top;
+							faceRects[iFace].width = faceBox.Right - faceBox.Left;
+							faceRects[iFace].height = faceBox.Bottom - faceBox.Top;
 						}
 					}
+					SafeRelease(pFaceResult);
 				}
 			}
-
-			SafeRelease(frame);
-		}
-
-		if (gotBodyData)
-		{
-			for (int i = 0; i < _countof(Bodies); ++i)
-			{
-				SafeRelease(Bodies[i]);
-			}
+			SafeRelease(pFaceFrame);
 		}
 	}
-	return faceRect;
+	return faceRects;
 }
