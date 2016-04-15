@@ -5,11 +5,12 @@
 C++ Library to obtain Kinect V2 RGB,Depth and IR feeds into the OpenCV Mat object (Based on the Official Microsoft Kinect SDK).
 
 ## Requirements
-1) Windows 8.1 or later
-2) Kinect for Windows V2 SDK
-3) Kinect for Windows V2 Sensor
-4) A USB 3.0 Port
-
+- Windows 8.1(x64) or later
+- Kinect for Windows V2 SDK
+- Kinect for Windows V2 Sensor
+- A USB 3.0 Port
+- Intel Core i7(3.1 Ghz or more)
+- DirectX 11 Compatible GPU
 
 
 Copyright (C) 2016, Shubham Batra (https://www.github.com/batrashubham)
