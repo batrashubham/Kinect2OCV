@@ -8,6 +8,7 @@ C++ Library to obtain Kinect V2 RGB,Depth and IR feeds into the OpenCV Mat objec
 - Kinect for Windows V2 Sensor
 - A USB 3.0 Port
 - Intel Core i7(3.1 Ghz or more)
+- RAM 4GB or more
 - DirectX 11 Compatible GPU
 - OpenCV 2.4+
 
