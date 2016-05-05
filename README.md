@@ -12,7 +12,7 @@
 - DirectX 11 Compatible GPU
 - OpenCV 2.4+
 
-## Whats's Currently Working
+## What's Currently Working
 - Color Feed
 - IR Feed
 - Depth Feed
