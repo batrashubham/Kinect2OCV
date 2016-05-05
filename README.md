@@ -1,5 +1,5 @@
 # Kinect2OCV
-
+## [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/batrashubham/kinect2ocv/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 C++ Library to obtain Kinect V2 RGB,Depth and IR feeds into the OpenCV Mat object (Based on the Official Microsoft Kinect SDK).
 
 ## Requirements
@@ -28,5 +28,5 @@ Copyright (C) 2016, Shubham Batra (https://www.github.com/batrashubham)
    limitations under the License.
 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/batrashubham/kinect2ocv/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 
