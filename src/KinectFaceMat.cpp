@@ -37,21 +37,7 @@ namespace K2OCV
 						BOOLEAN bTracked = false;
 						hResult = pBody[count]->get_IsTracked(&bTracked);
 						if (SUCCEEDED(hResult) && bTracked) {
-							/*// Joint
-							Joint joint[JointType::JointType_Count];
-							hResult = pBody[count]->GetJoints( JointType::JointType_Count, joint );
-							if( SUCCEEDED( hResult ) ){
-							for( int type = 0; type < JointType::JointType_Count; type++ ){
-							ColorSpacePoint colorSpacePoint = { 0 };
-							pCoordinateMapper->MapCameraPointToColorSpace( joint[type].Position, &colorSpacePoint );
-							int x = static_cast<int>( colorSpacePoint.X );
-							int y = static_cast<int>( colorSpacePoint.Y );
-							if( ( x >= 0 ) && ( x < width ) && ( y >= 0 ) && ( y < height ) ){
-							cv::circle( bufferMat, cv::Point( x, y ), 5, static_cast<cv::Scalar>( color[count] ), -1, CV_AA );
-							}
-							}
-							}*/
-
+						
 							// Set TrackingID to Detect Face
 							UINT64 trackingId = _UI64_MAX;
 							hResult = pBody[count]->get_TrackingId(&trackingId);
