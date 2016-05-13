@@ -17,6 +17,7 @@
 - IR Feed
 - Depth Feed
 - Face Basics
+- ColorPoint To Depth Point mapping (Not Accurate)
 
 ## Yet To Be Implemented
 - Long Exposure IR Feed
@@ -45,7 +46,4 @@ Copyright (C) 2016, Shubham Batra (https://www.github.com/batrashubham)
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
-
-
 

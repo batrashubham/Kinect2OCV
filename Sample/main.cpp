@@ -11,20 +11,40 @@
 *
 */
 
-#pragma once
+#include "KinectSource.hpp"
+#include "helper.hpp"
 
-#include "helper.h"
-#include "KinectSources.h"
-#include <opencv2\highgui.hpp>
-#include <opencv2\core.hpp>
-#include <opencv2\imgproc.hpp>
-#include <Windows.h>
-#include <Kinect.h>
-#include <Kinect.Face.h>
+using namespace K2OCV;
+using namespace cv;
 
-//Obtain High Definition Face Frame from Kinect
-cv::Rect* getHDfaceRect();			/********    To be implemented later   *********/
+int main() {
+	
+	Mat dimg , iimg , cimg;
+	CKinectSource* src = new CKinectSource();
+	src->initSensor();
+	src->initSourceReader(IR_S | COLOR_S | DEPTH_S | BODY_S | FACE_S);
 
-									//Obtain Standard Face Frame from Kinect
-cv::Rect* getSDFaceRect(IBodyFrameReader* _body_reader, IFaceFrameReader* _face_reader[],
-	IFaceFrameSource* _face_source[], int& trackedFaces, HRESULT faceReaderInit, HRESULT bodyReaderInit);
+	while (true) {
+		cimg = src->getFrame(COLOR_F);
+		iimg = src->getFrame(IR_F);
+		dimg = src->getFrame(DEPTH_F);
+
+		if (cimg.data) {
+			imshow("color", cimg);
+		}
+
+		if (iimg.data) {
+			imshow("ir", iimg);
+		}
+
+		if (dimg.data) {
+			imshow("depth", dimg);
+		}
+
+		if (waitKey(20) == 27) {
+			break;
+		}
+	}
+
+	return 0;
+}
