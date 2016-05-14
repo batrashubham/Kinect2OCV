@@ -1,4 +1,6 @@
-# Kinect2OCV [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/batrashubham/kinect2ocv/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+# Kinect2OCV [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/batrashubham/kinect2ocv/trend.png)](https://bitdeli.com/free "Bitdeli Badge") 
+
+[![Gitter](https://badges.gitter.im/batrashubham/Kinect2OCV.svg)](https://gitter.im/batrashubham/Kinect2OCV?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ### C++ Library to obtain Kinect V2 RGB,Depth,IR and Face Basics feeds into OpenCV structs (Based on the Official Microsoft Kinect SDK).
 
