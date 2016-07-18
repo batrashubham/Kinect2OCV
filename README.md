@@ -1,4 +1,4 @@
-# Kinect2OCV [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/batrashubham/kinect2ocv/trend.png)](https://bitdeli.com/free "Bitdeli Badge") 
+# Kinect2OCV [![Sbatra](https://img.shields.io/badge/developer-sbatra-blue.svg)](https://batrashubham.com)
 
 [![Gitter](https://badges.gitter.im/batrashubham/Kinect2OCV.svg)](https://gitter.im/batrashubham/Kinect2OCV?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
