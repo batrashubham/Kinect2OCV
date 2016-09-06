@@ -30,7 +30,7 @@
 - Kinect Fusion
 
 ## Tutorial
-###### See Sample 
+#### See [here](https://batrashubham.com/2016-07-28-Kinect2OCV/)
 
 
 ## Licence 
