@@ -1,5 +1,6 @@
 # Kinect2OCV
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/43605552dbb84bed89ad7a37d262b047)](https://app.codacy.com/app/batrashubham/Kinect2OCV?utm_source=github.com&utm_medium=referral&utm_content=batrashubham/Kinect2OCV&utm_campaign=Badge_Grade_Dashboard)
 [![Gitter](https://badges.gitter.im/batrashubham/Kinect2OCV.svg)](https://gitter.im/batrashubham/Kinect2OCV?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ### C++ Library to obtain Kinect V2 RGB,Depth,IR and Face Basics feeds into OpenCV structs (Based on the Official Microsoft Kinect SDK).
