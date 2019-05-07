@@ -74,7 +74,7 @@ namespace K2OCV
 							depthImage = cv::Mat(frameHeight, frameWidth, CV_8U);
 							for (int i = 0; i < imgSize; i++) {
 								UINT16 depth = pixelData[i];
-								depthImage.at<UINT8>(i) = depth & 0xffff;
+								depthImage.at<UINT8>(i) = depth >> 5;
 							}
 						}
 						else if (SUCCEEDED(hr) && rawData) {
