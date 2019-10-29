@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2016, Shubham Batra (https://www.github.com/batrashubham)
+* Copyright (C) 2019, Shubham Batra (https://www.github.com/batrashubham)
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -16,7 +16,6 @@
 
 namespace K2OCV 
 {
-	////////////////////////////////////////////////////////////////////////////////////////////////////
 	cv::Mat CKinectStreamsMat::getColorFrame(IColorFrameReader * _color_reader, HRESULT sourceInitHresult)
 	{
 		HRESULT hr = sourceInitHresult;
@@ -47,8 +46,6 @@ namespace K2OCV
 		return colorImage;
 	}
 
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////
 	cv::Mat CKinectStreamsMat::getDepthFrame(IDepthFrameReader * _depth_reader, HRESULT sourceInitHresult, bool rawData)
 	{
 		HRESULT hr = sourceInitHresult;
@@ -94,8 +91,6 @@ namespace K2OCV
 		return depthImage;
 	}
 
-
-	////////////////////////////////////////////////////////////////////////////////////////////////
 	cv::Mat CKinectStreamsMat::getIRframe(IInfraredFrameReader * _ir_reader, HRESULT sourceInitHresult)
 	{
 		HRESULT hr = sourceInitHresult;

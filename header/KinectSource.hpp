@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2016, Shubham Batra (https://www.github.com/batrashubham)
+* Copyright (C) 2019, Shubham Batra (https://www.github.com/batrashubham)
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -14,7 +14,6 @@
 #pragma once
 
 #include "helper.hpp"
-
 
 namespace K2OCV {
 
@@ -98,17 +97,8 @@ class CKinectStreamsMat;
 		HRESULT initBodyIndexFrameReader();        /* To be implemented later */
 
 	public:
-
-		/*********     Constructor ***********/
-
 		CKinectSource();
-
-		/*********     Destructor  **********/
-
 		~CKinectSource();
-
-		/*********     Methods     **********/
-
 		//Initialize the default Kinect Sensor
 		HRESULT initSensor();
 		//Pause the Kinect Sensor
