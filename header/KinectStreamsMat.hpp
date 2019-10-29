@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2016, Shubham Batra (https://www.github.com/batrashubham)
+* Copyright (C) 2019, Shubham Batra (https://www.github.com/batrashubham)
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -18,19 +18,13 @@
 namespace K2OCV {
 
 	class CKinectStreamsMat {
-	
 	public:
-		/********************     Functions   *************************/
-
 	//Obtain Color Frame from Kinect If Color Source Successfuly Initialized
 	cv::Mat getColorFrame(IColorFrameReader * _color_reader, HRESULT sourceInitHresult);
-
 	//Obtain Depth Frame from Kinect If Depth Source Successfuly Initialized
 	cv::Mat getDepthFrame(IDepthFrameReader * _depth_reader, HRESULT sourceInitHresult, bool rawData = false);
-
 	//Obtain Infrared Frame from Kinect If IR Source Successfuly Initialized
 	cv::Mat getIRframe(IInfraredFrameReader * _ir_reader, HRESULT sourceInitHresult);
-
 	};
 
 

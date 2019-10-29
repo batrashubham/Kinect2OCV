@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2016, Shubham Batra (https://www.github.com/batrashubham)
+* Copyright (C) 2019, Shubham Batra (https://www.github.com/batrashubham)
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -20,7 +20,6 @@ namespace K2OCV
 	/////TO BE IMPLEMENTED LATER///////////
 	cv::Rect * CKinectFaceMat::getHDfaceRect() { return nullptr; } 
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	cv::Rect* CKinectFaceMat::getSDFaceRect(IBodyFrameReader* _body_reader, IFaceFrameReader* _face_reader[],
 		IFaceFrameSource* _face_source[], int& trackedFaces, HRESULT faceReaderInit, HRESULT bodyReaderInit, bool color) 
 	{

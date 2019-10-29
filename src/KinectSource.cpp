@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2016, Shubham Batra (https://www.github.com/batrashubham)
+* Copyright (C) 2019, Shubham Batra (https://www.github.com/batrashubham)
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -34,10 +34,6 @@ namespace K2OCV {
 		| FACE_ENGAGEMENT;
 
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-	////    CONSTRUCTOR    ////////////
 	CKinectSource::CKinectSource() :
 		_sensor(nullptr),
 		_depth_reader(nullptr),
@@ -71,13 +67,6 @@ namespace K2OCV {
 
 	}
 
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-	////    DESTRUCTOR    ////////////
 	CKinectSource::~CKinectSource()
 	{
 		//Release all acquired resources
@@ -119,11 +108,6 @@ namespace K2OCV {
 	}
 
 
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 	//Initialize and Open the Default Kinect Sensor
 	HRESULT CKinectSource::initSensor()
 	{
@@ -138,12 +122,6 @@ namespace K2OCV {
 		return hr;
 	}
 
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 	//Stop the Kinect Sensor
 	HRESULT CKinectSource::stopSensor()
 	{
@@ -156,11 +134,6 @@ namespace K2OCV {
 
 		return hr;
 	}
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 	
 	//Restart the Kinect Sensor
 	HRESULT CKinectSource::restartSensor()
@@ -174,24 +147,12 @@ namespace K2OCV {
 		return hr;
 	}
 
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 	//Initialize a Multi Source Frame Reader
 	HRESULT CKinectSource::initMultiSourceReader(SOURCETYPE sourceTypes)
 	{
 		/******     To be implemented later     ********/
 		return E_NOTIMPL;
 	}
-
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 	//Initialize Single Source Readers
 	//Can initialize more than one at a time
@@ -256,23 +217,12 @@ namespace K2OCV {
 		}
 	}
 
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 	//Returns a Single frame of type "frameType" from the initialized Multi Source Reader
 	cv::Mat CKinectSource::getMultiFrame(FRAMETYPE frameType)
 	{
 		/**** To be implemented later *****/
 		return cv::Mat();
 	}
-
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 	//Returns a Single Frame of type "frameType"
 	cv::Mat CKinectSource::getFrame(FRAMETYPE frameType, bool rawData)
@@ -292,22 +242,12 @@ namespace K2OCV {
 		}
 	}
 
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 	//Returns Face Bounding Box
 	cv::Rect * CKinectSource::getFaceRect(int & trackedFaces, bool color)
 	{
 		return faceMatSource->getSDFaceRect(this->_body_reader, this->_face_reader, 
 			this->_face_source, trackedFaces, this->faceReaderInit,this-> bodyReaderInit, color);
 	}
-
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 	//Initialize Color Source and Color Reader
 	HRESULT CKinectSource::initColorFrameReader()
@@ -323,11 +263,6 @@ namespace K2OCV {
 		return hr;
 	}
 
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 	//Initialize Depth Source and Depth Reader
 	HRESULT CKinectSource::initDepthFrameReader()
 	{
@@ -342,11 +277,6 @@ namespace K2OCV {
 		return hr;
 	}
 
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 	//Initialize IR Source and IR Reader
 	HRESULT CKinectSource::initIRframeReader()
 	{
@@ -360,10 +290,6 @@ namespace K2OCV {
 
 		return hr;
 	}
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 	//Initialize Standard Face Frame Reader
 	HRESULT CKinectSource::initFaceFrameReader(FEATURETYPE features)
@@ -383,21 +309,12 @@ namespace K2OCV {
 		return hr;
 	}
 
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 	//Initialize HD Face Source
 	HRESULT CKinectSource::initHDFaceFrameReader()
 	{
 		/****** To be implemented later ********/
 		return E_NOTIMPL;
 	}
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 	//Initialize Body Frame Reader
 	HRESULT CKinectSource::initBodyFrameReader()
@@ -413,10 +330,6 @@ namespace K2OCV {
 		return hr;
 	}
 
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 	//Initialize Coordinate Mapper
 	HRESULT CKinectSource::initCoordinateMapper()
 	{
@@ -425,10 +338,6 @@ namespace K2OCV {
 		c_mapperInit = hr;
 		return hr;
 	}
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 	//Returns Depth of Given Color Frame Coordinate (X,Y)
 	float CKinectSource::getColorPixelDepth(HRESULT c_mapperInit, cv::Mat depthMat, int x, int y)
@@ -469,9 +378,6 @@ namespace K2OCV {
 		}
 		return depth;
 	}
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	//Initialize Body Index Frame Reader
 	HRESULT CKinectSource::initBodyIndexFrameReader()
